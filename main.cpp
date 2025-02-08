@@ -128,6 +128,53 @@ vector<PuzzleState> generateMoves(const PuzzleState& state) {
     return moves;
 }
 
+void uniformCostSearch(const PuzzleState& initialState) {
+    PuzzleState current = initialState;
+
+    // Check if the initial state is the goal state
+    if (isGoalState(current)) {
+        cout << "Solution found with cost: " << current.cost << endl;
+        cout << "Path: " << current.path << endl;
+        return;
+    }
+
+    // Generate all possible moves from the initial state
+    vector<PuzzleState> moves = generateMoves(current);
+
+    // Check each move individually
+    if (!moves.empty()) {
+        PuzzleState move1 = moves[0];
+        if (isGoalState(move1)) {
+            cout << "Solution found with cost: " << move1.cost << endl;
+            cout << "Path: " << move1.path << endl;
+            return;
+        }
+
+        PuzzleState move2 = moves[1];
+        if (isGoalState(move2)) {
+            cout << "Solution found with cost: " << move2.cost << endl;
+            cout << "Path: " << move2.path << endl;
+            return;
+        }
+
+        PuzzleState move3 = moves[2];
+        if (isGoalState(move3)) {
+            cout << "Solution found with cost: " << move3.cost << endl;
+            cout << "Path: " << move3.path << endl;
+            return;
+        }
+
+        PuzzleState move4 = moves[3];
+        if (isGoalState(move4)) {
+            cout << "Solution found with cost: " << move4.cost << endl;
+            cout << "Path: " << move4.path << endl;
+            return;
+        }
+    }
+
+    cout << "No solution found." << endl;
+}
+
 int main() {
     PuzzleState initialState;
     initialState.board = {
@@ -146,19 +193,21 @@ int main() {
         cout << endl;
     }
 
-    int row;
-    int col;
-    findEmptyTile(initialState.board, row, col);
-    cout << "Empty tile is at: (" << row << ", " << col << ")" << endl;
+    // int row;
+    // int col;
+    // findEmptyTile(initialState.board, row, col);
+    // cout << "Empty tile is at: (" << row << ", " << col << ")" << endl;
 
-    if (isGoalState(initialState)) {
-        cout << "The initial state is already the goal state!" << endl;
-    } else {
-        cout << "The initial state is not the goal state." << endl;
-    }
+    // if (isGoalState(initialState)) {
+    //     cout << "The initial state is already the goal state!" << endl;
+    // } else {
+    //     cout << "The initial state is not the goal state." << endl;
+    // }
 
-    vector<PuzzleState> moves = generateMoves(initialState);
-    cout << "Possible moves: " << moves.size() << endl;
+    uniformCostSearch(initialState);
+
+    // vector<PuzzleState> moves = generateMoves(initialState);
+    // cout << "Possible moves: " << moves.size() << endl;
 
     return 0;
 }
