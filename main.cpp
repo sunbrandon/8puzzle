@@ -175,6 +175,84 @@ void uniformCostSearch(const PuzzleState& initialState) {
     cout << "No solution found." << endl;
 }
 
+int misplacedTileHeuristic(const vector<vector<int>>& board) {
+    int count = 0;
+    if (board[0][0] != GOAL_STATE[0][0] && board[0][0] != 0) {
+        count++;
+    }
+    if (board[0][1] != GOAL_STATE[0][1] && board[0][1] != 0) {
+        count++;
+    }
+    if (board[0][2] != GOAL_STATE[0][2] && board[0][2] != 0) {
+        count++;
+    }
+    if (board[1][0] != GOAL_STATE[1][0] && board[1][0] != 0) {
+        count++;
+    }
+    if (board[1][1] != GOAL_STATE[1][1] && board[1][1] != 0) {
+        count++;
+    }
+    if (board[1][2] != GOAL_STATE[1][2] && board[1][2] != 0) {
+        count++;
+    }
+    if (board[2][0] != GOAL_STATE[2][0] && board[2][0] != 0) {
+        count++;
+    }
+    if (board[2][1] != GOAL_STATE[2][1] && board[2][1] != 0) {
+        count++;
+    }
+    if (board[2][2] != GOAL_STATE[2][2] && board[2][2] != 0) {
+        count++;
+    }
+    return count;
+}
+
+void aStarMisplacedTile(const PuzzleState& initialState) {
+    PuzzleState current = initialState;
+
+    // Check if the initial state equals goal state
+    if (isGoalState(current)) {
+        cout << "Solution found with cost: " << current.cost << endl;
+        cout << "Path: " << current.path << endl;
+        return;
+    }
+
+    vector<PuzzleState> moves = generateMoves(current);
+
+    if (!moves.empty()) {
+        PuzzleState move1 = moves[0];
+        if (isGoalState(move1)) {
+            cout << "Solution found with cost: " << move1.cost << endl;
+            cout << "Path: " << move1.path << endl;
+            return;
+        }
+
+        PuzzleState move2 = moves[1];
+        if (isGoalState(move2)) {
+            cout << "Solution found with cost: " << move2.cost << endl;
+            cout << "Path: " << move2.path << endl;
+            return;
+        }
+
+        PuzzleState move3 = moves[2];
+        if (isGoalState(move3)) {
+            cout << "Solution found with cost: " << move3.cost << endl;
+            cout << "Path: " << move3.path << endl;
+            return;
+        }
+
+        PuzzleState move4 = moves[3];
+        if (isGoalState(move4)) {
+            cout << "Solution found with cost: " << move4.cost << endl;
+            cout << "Path: " << move4.path << endl;
+            return;
+        }
+    }
+
+    // cout << "OUTPUT FLAG" << endl;
+    cout << "No solution found." << endl;
+}
+
 int main() {
     PuzzleState initialState;
     initialState.board = {
@@ -204,7 +282,9 @@ int main() {
     //     cout << "The initial state is not the goal state." << endl;
     // }
 
-    uniformCostSearch(initialState);
+    // uniformCostSearch(initialState);
+
+    aStarMisplacedTile(initialState);
 
     // vector<PuzzleState> moves = generateMoves(initialState);
     // cout << "Possible moves: " << moves.size() << endl;
