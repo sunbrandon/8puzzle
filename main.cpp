@@ -12,7 +12,7 @@ const vector<vector<int>> GOAL_STATE = {
 struct PuzzleState {
     // Current state of the board
     vector<vector<int>> board;
-     // Number of moves taken to reach this state
+    // Number of moves taken to reach this state
     int cost;
     string path;
 };
@@ -72,6 +72,62 @@ void findEmptyTile(const vector<vector<int>>& board, int& row, int& col) {
     col = -1;
 }
 
+vector<PuzzleState> generateMoves(const PuzzleState& state) {
+    vector<PuzzleState> moves;
+    int row, col;
+    findEmptyTile(state.board, row, col);
+
+    // Move Left
+    if (col > 0) {
+        PuzzleState newState = state;
+        // Move tile to the right
+        newState.board[row][col] = newState.board[row][col - 1];
+        // Set the empty tile
+        newState.board[row][col - 1] = 0; 
+        newState.cost += 1;
+        newState.path += "L";
+        moves.push_back(newState);
+    }
+
+    // Move Right
+    if (col < 2) {
+        PuzzleState newState = state;
+        // Move tile to the left
+        newState.board[row][col] = newState.board[row][col + 1];
+        // Set the empty tile
+        newState.board[row][col + 1] = 0; 
+        newState.cost += 1;
+        newState.path += "R";
+        moves.push_back(newState);
+    }
+
+    // Move Up
+    if (row > 0) {
+        PuzzleState newState = state;
+        // Move tile down
+        newState.board[row][col] = newState.board[row - 1][col];
+        // Set the empty tile
+        newState.board[row - 1][col] = 0; 
+        newState.cost += 1;
+        newState.path += "U";
+        moves.push_back(newState);
+    }
+
+    // Move Down
+    if (row < 2) {
+        PuzzleState newState = state;
+        // Move tile up
+        newState.board[row][col] = newState.board[row + 1][col];
+        // Set the empty tile
+        newState.board[row + 1][col] = 0;
+        newState.cost += 1;
+        newState.path += "D";
+        moves.push_back(newState);
+    }
+
+    return moves;
+}
+
 int main() {
     PuzzleState initialState;
     initialState.board = {
@@ -90,7 +146,8 @@ int main() {
         cout << endl;
     }
 
-int row, col;
+    int row;
+    int col;
     findEmptyTile(initialState.board, row, col);
     cout << "Empty tile is at: (" << row << ", " << col << ")" << endl;
 
@@ -99,6 +156,9 @@ int row, col;
     } else {
         cout << "The initial state is not the goal state." << endl;
     }
+
+    vector<PuzzleState> moves = generateMoves(initialState);
+    cout << "Possible moves: " << moves.size() << endl;
 
     return 0;
 }
