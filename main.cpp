@@ -33,6 +33,7 @@ void printBoard(const vector<vector<int> >& board) {
     cout << "[ " << board[2][0] << ", " << board[2][1] << ", " << board[2][2] << " ]" << endl;
 }
 
+// recursively prints solution by reverse traversing
 void printPath(Node* node) {
     if (node->parent != NULL) { 
         printPath(node->parent); 
@@ -49,10 +50,12 @@ void printSolution(Node* goal) {
     cout << endl;
 }
 
+// checks the board of the current node to see if equal to goal state
 bool isGoalState(const Node* node) {
     return (node->board == GOAL_STATE);
 }
 
+// go through each tile changing coordinates until empty tile is found
 void findEmptyTile(const vector<vector<int>>& board, int& row, int& col) {
     if (board[0][0] == 0) { 
         row = 0; 
@@ -99,11 +102,12 @@ void findEmptyTile(const vector<vector<int>>& board, int& row, int& col) {
         col = 2; 
         return; 
     }
-    // If board is invalid return non possible values
+    // if no empty tile found board is invalid, return arbitrary val
     row = -1; 
     col = -1;
 }
 
+// generate all possible moves from the current node
 vector<Node*> generateMoves(Node* current) {
     // vector<PuzzleState> moves;
     vector<Node*> moves;
@@ -111,9 +115,11 @@ vector<Node*> generateMoves(Node* current) {
     int col;
     findEmptyTile(current->board, row, col);
     Node* newNode = NULL;
+    // check if left move is possible
     if (col > 0) { 
         newNode = new Node;
         newNode->board = current->board;
+        // if left move is possible swap with empty tile
         newNode->board[row][col] = newNode->board[row][col - 1];
         newNode->board[row][col - 1] = 0;
         newNode->cost = current->cost + 1;
@@ -121,9 +127,11 @@ vector<Node*> generateMoves(Node* current) {
         newNode->move = 'L';
         moves.push_back(newNode);
     }
+    // check if right move is possible
     if (col < 2) { 
         newNode = new Node;
         newNode->board = current->board;
+        // if right move is possible swap with empty tile
         newNode->board[row][col] = newNode->board[row][col + 1];
         newNode->board[row][col + 1] = 0;
         newNode->cost = current->cost + 1;
@@ -131,9 +139,11 @@ vector<Node*> generateMoves(Node* current) {
         newNode->move = 'R';
         moves.push_back(newNode);
     }
+    // check if possible to move up
     if (row > 0) { 
         newNode = new Node;
         newNode->board = current->board;
+        // if possible to move up swap with empty tile
         newNode->board[row][col] = newNode->board[row - 1][col];
         newNode->board[row - 1][col] = 0;
         newNode->cost = current->cost + 1;
@@ -141,9 +151,11 @@ vector<Node*> generateMoves(Node* current) {
         newNode->move = 'U';
         moves.push_back(newNode);
     }
+    // check if possible to move down
     if (row < 2) { 
         newNode = new Node;
         newNode->board = current->board;
+        // if possible to move down swap with empty tile
         newNode->board[row][col] = newNode->board[row + 1][col];
         newNode->board[row + 1][col] = 0;
         newNode->cost = current->cost + 1;
@@ -201,8 +213,10 @@ vector<Node*> generateMoves(Node* current) {
 //     cout << "No solution found." << endl;
 // }
 
+// goes through each tile on the board and increments a count of misplaced tiles
 int misplacedTileHeuristic(const vector<vector<int> >& board) {
     int count = 0;
+    // compare tile on current board to goal board, if not match increment
     if ((board[0][0] != 0) && (board[0][0] != GOAL_STATE[0][0])) { 
         count++; 
     }
@@ -279,13 +293,16 @@ int misplacedTileHeuristic(const vector<vector<int> >& board) {
 //     cout << "No solution found." << endl;
 // }
 
+// 
 int manhattanDistanceHeuristic(const vector<vector<int> >& board) {
     int distance = 0;
     int goalRow = 0;
     int goalCol = 0;
+    // check each tile position if not empty and calculate the goal row and column
     if (board[0][0] != 0) { 
         goalRow = (board[0][0] - 1) / 3; 
         goalCol = (board[0][0] - 1) % 3; 
+        // add the manhattan distance to the goal position from current position
         distance = distance + abs(0 - goalRow) + abs(0 - goalCol); 
     }
     if (board[0][1] != 0) { 
@@ -331,6 +348,7 @@ int manhattanDistanceHeuristic(const vector<vector<int> >& board) {
     return distance;
 }
 
+// function used by priority queue to determine where to expand
 struct CompareMisplacedTile {
     bool operator()(const Node* a, const Node* b) const {
         int g_a = a->cost;
@@ -343,6 +361,7 @@ struct CompareMisplacedTile {
     }
 };
 
+// function used by priority queue to determine where to expand
 struct CompareManhattanDistance {
     bool operator()(const Node* a, const Node* b) const {
         int g_a = a->cost;
@@ -355,21 +374,27 @@ struct CompareManhattanDistance {
     }
 };
 
+// function implementing each search algorithm and choosing based of user choice parameter
 void generalSearch(Node* initialNode, int algorithmChoice) {
     int nodesExpanded = 0;
     int maxQueueSize = 0;
     if (algorithmChoice == 1) { 
         queue<Node*> frontier;
         frontier.push(initialNode);
+        // continue searching while the queue is populated
         while (!frontier.empty()) {
+            // keep track of max queue size by updating value if queue is greater than current max size
             if (frontier.size() > maxQueueSize) { 
                 maxQueueSize = frontier.size(); 
             }
+            // queue is first in first out so remove next node from queue
             Node* current = frontier.front();
             frontier.pop();
             nodesExpanded = nodesExpanded + 1;
-            cout << "Expanding state (Uniform Cost): g(n) = " << current->cost << ", f(n) = " << current->cost << endl;
+            // expand node
+            cout << "The best state to expand with a g(n) = " << current->cost << " is..." << endl;
             printBoard(current->board);
+            cout << endl;
             // cout << "---------------------" << endl;
             if (isGoalState(current)) { 
                 printSolution(current); 
@@ -378,6 +403,7 @@ void generalSearch(Node* initialNode, int algorithmChoice) {
                 cout << "Max queue size: " << maxQueueSize << endl;
                 return; 
             }
+            // generate valid moves from current state and expanded node
             vector<Node*> moves = generateMoves(current);
             if (moves.size() > 0) { 
                 frontier.push(moves[0]); 
@@ -400,13 +426,15 @@ void generalSearch(Node* initialNode, int algorithmChoice) {
             if (frontier.size() > maxQueueSize) { 
                 maxQueueSize = frontier.size(); 
             }
+            // remove node with lowest cost
             Node* current = frontier.top();
             frontier.pop();
             nodesExpanded = nodesExpanded + 1;
+            // compute g(n) and h(n) to display expansion
             int g_val = current->cost;
             int h_val = misplacedTileHeuristic(current->board);
             int f_val = g_val + h_val;
-            cout << "Expanding state (Misplaced Tile Heuristic): g(n) = " << g_val << ", h(n) = " << h_val << ", f(n) = " << f_val << endl;
+            cout << "The best state to expand with a g(n) = " << g_val << " and h(n) = " << h_val << " is..." << endl;
             printBoard(current->board);
             // cout << "---------------------" << endl;
             if (isGoalState(current)) { 
@@ -438,13 +466,14 @@ void generalSearch(Node* initialNode, int algorithmChoice) {
             if (frontier.size() > maxQueueSize) { 
                 maxQueueSize = frontier.size(); 
             }
+            // get node with lowest cost
             Node* current = frontier.top();
             frontier.pop();
             nodesExpanded = nodesExpanded + 1;
             int g_val = current->cost;
             int h_val = manhattanDistanceHeuristic(current->board);
             int f_val = g_val + h_val;
-            cout << "Expanding state (Manhattan Distance Heuristic): g(n) = " << g_val << ", h(n) = " << h_val << ", f(n) = " << f_val << endl;
+            cout << "The best state to expand with a g(n) = " << g_val << " and h(n) = " << h_val << " is..." << endl;
             printBoard(current->board);
             // cout << "---------------------" << endl;
             if (isGoalState(current)) { 
@@ -469,6 +498,7 @@ void generalSearch(Node* initialNode, int algorithmChoice) {
             }
         }
     }
+    // 
     else { 
         cout << "Invalid algorithm choice." << endl;
         return;
@@ -477,9 +507,12 @@ void generalSearch(Node* initialNode, int algorithmChoice) {
 }
 
 int main() {
-    int userChoice;
-    cout << "Welcome to 862384951 8-Puzzle Solver. Type '1' to use a default puzzle, or '2' to create your own." << endl;
-    cin >> userChoice;
+    int userChoice = 0;
+    cout << "Welcome to 862384951 8-Puzzle Solver. ";
+    while (userChoice != 1 && userChoice != 2) {
+        cout << "Type '1' to use a default puzzle, or '2' to create your own." << endl;
+        cin >> userChoice;
+    }
     Node* initialNode = new Node;
     initialNode->board.resize(3);
     initialNode->board[0].resize(3);
@@ -497,32 +530,33 @@ int main() {
         initialNode->board[2][2] = 8;
     }
     else if (userChoice == 2) { 
-        cout << "Enter your puzzle, using a zero to represent the blank. Please only enter valid 8-puzzles." << endl;
-        cout << "Enter the puzzle delimiting the numbers with a space. Type RETURN only when finished." << endl;
+        cout << "Enter your puzzle, using a zero to represent the blank. Please only enter valid 8-puzzles. Enter the puzzle delimiting the numbers with a space. Type RETURN only when finished." << endl;
+        cout << endl;
         int first;
         int second;
         int third;
-        cout << "Enter the first row: " << endl;
+        cout << "Enter the first row: ";
         cin >> first;
         cin >> second;
         cin >> third;
         initialNode->board[0][0] = first;
         initialNode->board[0][1] = second;
         initialNode->board[0][2] = third;
-        cout << "Enter the second row: " << endl;
+        cout << "Enter the second row: ";
         cin >> first;
         cin >> second;
         cin >> third;
         initialNode->board[1][0] = first;
         initialNode->board[1][1] = second;
         initialNode->board[1][2] = third;
-        cout << "Enter the third row: " << endl;
+        cout << "Enter the third row: ";
         cin >> first;
         cin >> second;
         cin >> third;
         initialNode->board[2][0] = first;
         initialNode->board[2][1] = second;
         initialNode->board[2][2] = third;
+        cout << endl;
     }
     else { 
         cout << "Invalid choice. Exiting." << endl;
@@ -561,9 +595,12 @@ int main() {
     //     cout << "The initial state is not the goal state." << endl;
     // }
 
-    cout << "Select algorithm. (1) for Uniform Cost Search, (2) for the Misplaced Tile Heuristic, or (3) for the Manhattan Distance Heuristic" << endl;
-    int algoChoice;
-    cin >> algoChoice;
+    int algoChoice = 0;
+    while (algoChoice != 1 && algoChoice != 2 && algoChoice !=3) {
+        cout << "Select algorithm. (1) for Uniform Cost Search, (2) for the Misplaced Tile Heuristic, or (3) for the Manhattan Distance Heuristic" << endl;
+        cin >> algoChoice;
+    }
+    cout << endl;
     generalSearch(initialNode, algoChoice);
     return 0;
 
