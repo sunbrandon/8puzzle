@@ -1,0 +1,16 @@
+Welcome to 862384951 8-Puzzle Solver. Type '1' to use a default puzzle, or '2' to create your own.
+1
+Select algorithm. (1) for Uniform Cost Search, (2) for the Misplaced Tile Heuristic, or (3) for the Manhattan Distance Heuristic
+2
+
+The best state to expand with a g(n) = 0 and h(n) = 0 is...
+[ 1, 2, 3 ]
+[ 4, 5, 6 ]
+[ 7, 8, 0 ]
+
+Goal state!
+
+Solution depth: 0
+Nodes expanded: 1
+Max queue size: 1
+Execution time: 0.000 s

@@ -572,6 +572,9 @@ int main() {
     initialNode->board[2].resize(3);
     if (userChoice == 1) { 
         // int test_board = rand() % 1;
+
+        // initialNode->board = TWENTY;
+
         // if (test_board == 0) {
             // initialNode->board[0][0] = FOUR[0][0];
             // initialNode->board[0][1] = FOUR[0][1];
@@ -616,15 +619,15 @@ int main() {
         //     initialNode->board[2][1] = TWOFOUR[2][1];
         //     initialNode->board[2][2] = TWOFOUR[2][2];
         // }
-        // initialNode->board[0][0] = 1;
-        // initialNode->board[0][1] = 2;
-        // initialNode->board[0][2] = 3;
-        // initialNode->board[1][0] = 0;
-        // initialNode->board[1][1] = 4;
-        // initialNode->board[1][2] = 6;
-        // initialNode->board[2][0] = 7;
-        // initialNode->board[2][1] = 5;
-        // initialNode->board[2][2] = 8;
+        initialNode->board[0][0] = 1;
+        initialNode->board[0][1] = 2;
+        initialNode->board[0][2] = 3;
+        initialNode->board[1][0] = 0;
+        initialNode->board[1][1] = 4;
+        initialNode->board[1][2] = 6;
+        initialNode->board[2][0] = 7;
+        initialNode->board[2][1] = 5;
+        initialNode->board[2][2] = 8;
     }
     else if (userChoice == 2) { 
         cout << "Enter your puzzle, using a zero to represent the blank. Please only enter valid 8-puzzles. Enter the puzzle delimiting the numbers with a space. Type RETURN only when finished." << endl;
