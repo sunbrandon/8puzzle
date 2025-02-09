@@ -4,6 +4,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
+#include <iomanip>
 
 using namespace std;
 
@@ -14,6 +16,18 @@ const vector<vector<int>> GOAL_STATE = {
 };
 
 // different boards with depths 4, 8, 16, and 24 for easy testing
+const vector<vector<int>> ZERO = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 0}
+};
+
+const vector<vector<int>> TWO = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {0, 7, 8}
+};
+
 const vector<vector<int>> FOUR = {
     {1, 2, 3},
     {5, 0, 6},
@@ -26,10 +40,22 @@ const vector<vector<int>> EIGHT = {
     {4, 7, 8}
 };
 
+const vector<vector<int>> TWELVE = {
+    {1, 3, 6},
+    {5, 0, 7},
+    {4, 8, 2}
+};
+
 const vector<vector<int>> SIXTEEN= {
     {1, 6, 7},
     {5, 0, 3},
     {4, 8, 2}
+};
+
+const vector<vector<int>> TWENTY = {
+    {7, 1, 2},
+    {4, 8, 5},
+    {6, 3, 0}
 };
 
 const vector<vector<int>> TWOFOUR = {
@@ -547,15 +573,15 @@ int main() {
     if (userChoice == 1) { 
         // int test_board = rand() % 1;
         // if (test_board == 0) {
-        //     initialNode->board[0][0] = FOUR[0][0];
-        //     initialNode->board[0][1] = FOUR[0][1];
-        //     initialNode->board[0][2] = FOUR[0][2];
-        //     initialNode->board[1][0] = FOUR[1][0];
-        //     initialNode->board[1][1] = FOUR[1][1];
-        //     initialNode->board[1][2] = FOUR[1][2];
-        //     initialNode->board[2][0] = FOUR[2][0];
-        //     initialNode->board[2][1] = FOUR[2][1];
-        //     initialNode->board[2][2] = FOUR[2][2];
+            // initialNode->board[0][0] = FOUR[0][0];
+            // initialNode->board[0][1] = FOUR[0][1];
+            // initialNode->board[0][2] = FOUR[0][2];
+            // initialNode->board[1][0] = FOUR[1][0];
+            // initialNode->board[1][1] = FOUR[1][1];
+            // initialNode->board[1][2] = FOUR[1][2];
+            // initialNode->board[2][0] = FOUR[2][0];
+            // initialNode->board[2][1] = FOUR[2][1];
+            // initialNode->board[2][2] = FOUR[2][2];
         // }
         // if (test_board == 0) {
         //     initialNode->board[0][0] = EIGHT[0][0];
@@ -590,15 +616,15 @@ int main() {
         //     initialNode->board[2][1] = TWOFOUR[2][1];
         //     initialNode->board[2][2] = TWOFOUR[2][2];
         // }
-        initialNode->board[0][0] = 1;
-        initialNode->board[0][1] = 2;
-        initialNode->board[0][2] = 3;
-        initialNode->board[1][0] = 0;
-        initialNode->board[1][1] = 4;
-        initialNode->board[1][2] = 6;
-        initialNode->board[2][0] = 7;
-        initialNode->board[2][1] = 5;
-        initialNode->board[2][2] = 8;
+        // initialNode->board[0][0] = 1;
+        // initialNode->board[0][1] = 2;
+        // initialNode->board[0][2] = 3;
+        // initialNode->board[1][0] = 0;
+        // initialNode->board[1][1] = 4;
+        // initialNode->board[1][2] = 6;
+        // initialNode->board[2][0] = 7;
+        // initialNode->board[2][1] = 5;
+        // initialNode->board[2][2] = 8;
     }
     else if (userChoice == 2) { 
         cout << "Enter your puzzle, using a zero to represent the blank. Please only enter valid 8-puzzles. Enter the puzzle delimiting the numbers with a space. Type RETURN only when finished." << endl;
@@ -672,7 +698,12 @@ int main() {
         cin >> algoChoice;
     }
     cout << endl;
+    auto start = std::chrono::high_resolution_clock::now();
     generalSearch(initialNode, algoChoice);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    double execTimeSec = duration.count() / 1000000.0;
+    cout << "Execution time: " << fixed << setprecision(3) << execTimeSec << " s" << endl;
     return 0;
 
     // uniformCostSearch(initialState);
@@ -684,3 +715,5 @@ int main() {
 
     return 0;
 }
+
+// g++ -std=c++11 main.cpp
