@@ -3,6 +3,7 @@
 #include <queue>
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -10,6 +11,31 @@ const vector<vector<int>> GOAL_STATE = {
     {1, 2, 3},
     {4, 5, 6},
     {7, 8, 0}
+};
+
+// different boards with depths 4, 8, 16, and 24 for easy testing
+const vector<vector<int>> FOUR = {
+    {1, 2, 3},
+    {5, 0, 6},
+    {4, 7, 8}
+};
+
+const vector<vector<int>> EIGHT = {
+    {1, 3, 6},
+    {5, 0, 2},
+    {4, 7, 8}
+};
+
+const vector<vector<int>> SIXTEEN= {
+    {1, 6, 7},
+    {5, 0, 3},
+    {4, 8, 2}
+};
+
+const vector<vector<int>> TWOFOUR = {
+    {0, 7, 2},
+    {4, 6, 1},
+    {3, 5, 8}
 };
 
 // struct PuzzleState {
@@ -519,6 +545,51 @@ int main() {
     initialNode->board[1].resize(3);
     initialNode->board[2].resize(3);
     if (userChoice == 1) { 
+        // int test_board = rand() % 1;
+        // if (test_board == 0) {
+        //     initialNode->board[0][0] = FOUR[0][0];
+        //     initialNode->board[0][1] = FOUR[0][1];
+        //     initialNode->board[0][2] = FOUR[0][2];
+        //     initialNode->board[1][0] = FOUR[1][0];
+        //     initialNode->board[1][1] = FOUR[1][1];
+        //     initialNode->board[1][2] = FOUR[1][2];
+        //     initialNode->board[2][0] = FOUR[2][0];
+        //     initialNode->board[2][1] = FOUR[2][1];
+        //     initialNode->board[2][2] = FOUR[2][2];
+        // }
+        // if (test_board == 0) {
+        //     initialNode->board[0][0] = EIGHT[0][0];
+        //     initialNode->board[0][1] = EIGHT[0][1];
+        //     initialNode->board[0][2] = EIGHT[0][2];
+        //     initialNode->board[1][0] = EIGHT[1][0];
+        //     initialNode->board[1][1] = EIGHT[1][1];
+        //     initialNode->board[1][2] = EIGHT[1][2];
+        //     initialNode->board[2][0] = EIGHT[2][0];
+        //     initialNode->board[2][1] = EIGHT[2][1];
+        //     initialNode->board[2][2] = EIGHT[2][2];
+        // }
+        // if (test_board == 2) {
+        //     initialNode->board[0][0] = SIXTEEN[0][0];
+        //     initialNode->board[0][1] = SIXTEEN[0][1];
+        //     initialNode->board[0][2] = SIXTEEN[0][2];
+        //     initialNode->board[1][0] = SIXTEEN[1][0];
+        //     initialNode->board[1][1] = SIXTEEN[1][1];
+        //     initialNode->board[1][2] = SIXTEEN[1][2];
+        //     initialNode->board[2][0] = SIXTEEN[2][0];
+        //     initialNode->board[2][1] = SIXTEEN[2][1];
+        //     initialNode->board[2][2] = SIXTEEN[2][2];
+        // }
+        // if (test_board == 3) {
+        //     initialNode->board[0][0] = TWOFOUR[0][0];
+        //     initialNode->board[0][1] = TWOFOUR[0][1];
+        //     initialNode->board[0][2] = TWOFOUR[0][2];
+        //     initialNode->board[1][0] = TWOFOUR[1][0];
+        //     initialNode->board[1][1] = TWOFOUR[1][1];
+        //     initialNode->board[1][2] = TWOFOUR[1][2];
+        //     initialNode->board[2][0] = TWOFOUR[2][0];
+        //     initialNode->board[2][1] = TWOFOUR[2][1];
+        //     initialNode->board[2][2] = TWOFOUR[2][2];
+        // }
         initialNode->board[0][0] = 1;
         initialNode->board[0][1] = 2;
         initialNode->board[0][2] = 3;
