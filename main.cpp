@@ -1,5 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <cmath>
+#include <cstdlib>
 
 using namespace std;
 
@@ -25,9 +28,9 @@ struct Node {
 };
 
 void printBoard(const vector<vector<int> >& board) {
-    cout << board[0][0] << " " << board[0][1] << " " << board[0][2] << endl;
-    cout << board[1][0] << " " << board[1][1] << " " << board[1][2] << endl;
-    cout << board[2][0] << " " << board[2][1] << " " << board[2][2] << endl;
+    cout << "[ " << board[0][0] << ", " << board[0][1] << ", " << board[0][2] << " ]" << endl;
+    cout << "[ " << board[1][0] << ", " << board[1][1] << ", " << board[1][2] << " ]" << endl;
+    cout << "[ " << board[2][0] << ", " << board[2][1] << ", " << board[2][2] << " ]" << endl;
 }
 
 void printPath(Node* node) {
@@ -38,10 +41,11 @@ void printPath(Node* node) {
 }
 
 void printSolution(Node* goal) {
+    cout << endl;
     cout << "Goal state!" << endl;
-    cout << "Solution found with cost (g(n)): " << goal->cost << endl;
-    cout << "Path: ";
-    printPath(goal);
+    // cout << "Solution found with cost (g(n)): " << goal->cost << endl;
+    // cout << "Path: ";
+    // printPath(goal);
     cout << endl;
 }
 
@@ -275,6 +279,58 @@ int misplacedTileHeuristic(const vector<vector<int> >& board) {
 //     cout << "No solution found." << endl;
 // }
 
+int manhattanDistanceHeuristic(const vector<vector<int> >& board) {
+    int distance = 0;
+    int goalRow = 0;
+    int goalCol = 0;
+    if (board[0][0] != 0) { 
+        goalRow = (board[0][0] - 1) / 3; 
+        goalCol = (board[0][0] - 1) % 3; 
+        distance = distance + abs(0 - goalRow) + abs(0 - goalCol); 
+    }
+    if (board[0][1] != 0) { 
+        goalRow = (board[0][1] - 1) / 3; 
+        goalCol = (board[0][1] - 1) % 3; 
+        distance = distance + abs(0 - goalRow) + abs(1 - goalCol); 
+    }
+    if (board[0][2] != 0) { 
+        goalRow = (board[0][2] - 1) / 3; 
+        goalCol = (board[0][2] - 1) % 3; 
+        distance = distance + abs(0 - goalRow) + abs(2 - goalCol); 
+    }
+    if (board[1][0] != 0) { 
+        goalRow = (board[1][0] - 1) / 3; 
+        goalCol = (board[1][0] - 1) % 3; 
+        distance = distance + abs(1 - goalRow) + abs(0 - goalCol); 
+    }
+    if (board[1][1] != 0) { 
+        goalRow = (board[1][1] - 1) / 3; 
+        goalCol = (board[1][1] - 1) % 3; 
+        distance = distance + abs(1 - goalRow) + abs(1 - goalCol); 
+    }
+    if (board[1][2] != 0) { 
+        goalRow = (board[1][2] - 1) / 3; 
+        goalCol = (board[1][2] - 1) % 3; 
+        distance = distance + abs(1 - goalRow) + abs(2 - goalCol); 
+    }
+    if (board[2][0] != 0) { 
+        goalRow = (board[2][0] - 1) / 3; 
+        goalCol = (board[2][0] - 1) % 3; 
+        distance = distance + abs(2 - goalRow) + abs(0 - goalCol); 
+    }
+    if (board[2][1] != 0) { 
+        goalRow = (board[2][1] - 1) / 3; 
+        goalCol = (board[2][1] - 1) % 3; 
+        distance = distance + abs(2 - goalRow) + abs(1 - goalCol); 
+    }
+    if (board[2][2] != 0) { 
+        goalRow = (board[2][2] - 1) / 3; 
+        goalCol = (board[2][2] - 1) % 3; 
+        distance = distance + abs(2 - goalRow) + abs(2 - goalCol); 
+    }
+    return distance;
+}
+
 struct CompareMisplacedTile {
     bool operator()(const Node* a, const Node* b) const {
         int g_a = a->cost;
@@ -282,6 +338,18 @@ struct CompareMisplacedTile {
         int f_a = g_a + h_a;
         int g_b = b->cost;
         int h_b = misplacedTileHeuristic(b->board);
+        int f_b = g_b + h_b;
+        return (f_a > f_b);
+    }
+};
+
+struct CompareManhattanDistance {
+    bool operator()(const Node* a, const Node* b) const {
+        int g_a = a->cost;
+        int h_a = manhattanDistanceHeuristic(a->board);
+        int f_a = g_a + h_a;
+        int g_b = b->cost;
+        int h_b = manhattanDistanceHeuristic(b->board);
         int f_b = g_b + h_b;
         return (f_a > f_b);
     }
@@ -302,7 +370,7 @@ void generalSearch(Node* initialNode, int algorithmChoice) {
             nodesExpanded = nodesExpanded + 1;
             cout << "Expanding state (Uniform Cost): g(n) = " << current->cost << ", f(n) = " << current->cost << endl;
             printBoard(current->board);
-            cout << "---------------------" << endl;
+            // cout << "---------------------" << endl;
             if (isGoalState(current)) { 
                 printSolution(current); 
                 cout << "Solution depth: " << current->cost << endl;
@@ -340,7 +408,7 @@ void generalSearch(Node* initialNode, int algorithmChoice) {
             int f_val = g_val + h_val;
             cout << "Expanding state (Misplaced Tile Heuristic): g(n) = " << g_val << ", h(n) = " << h_val << ", f(n) = " << f_val << endl;
             printBoard(current->board);
-            cout << "---------------------" << endl;
+            // cout << "---------------------" << endl;
             if (isGoalState(current)) { 
                 printSolution(current); 
                 cout << "Solution depth: " << current->cost << endl;
@@ -363,6 +431,49 @@ void generalSearch(Node* initialNode, int algorithmChoice) {
             }
         }
     }
+    else if (algorithmChoice == 3) { 
+        priority_queue<Node*, vector<Node*>, CompareManhattanDistance> frontier;
+        frontier.push(initialNode);
+        while (!frontier.empty()) {
+            if (frontier.size() > maxQueueSize) { 
+                maxQueueSize = frontier.size(); 
+            }
+            Node* current = frontier.top();
+            frontier.pop();
+            nodesExpanded = nodesExpanded + 1;
+            int g_val = current->cost;
+            int h_val = manhattanDistanceHeuristic(current->board);
+            int f_val = g_val + h_val;
+            cout << "Expanding state (Manhattan Distance Heuristic): g(n) = " << g_val << ", h(n) = " << h_val << ", f(n) = " << f_val << endl;
+            printBoard(current->board);
+            // cout << "---------------------" << endl;
+            if (isGoalState(current)) { 
+                printSolution(current); 
+                cout << "Solution depth: " << current->cost << endl;
+                cout << "Nodes expanded: " << nodesExpanded << endl;
+                cout << "Max queue size: " << maxQueueSize << endl;
+                return; 
+            }
+            vector<Node*> moves = generateMoves(current);
+            if (moves.size() > 0) { 
+                frontier.push(moves[0]); 
+            }
+            if (moves.size() > 1) { 
+                frontier.push(moves[1]); 
+            }
+            if (moves.size() > 2) { 
+                frontier.push(moves[2]); 
+            }
+            if (moves.size() > 3) { 
+                frontier.push(moves[3]); 
+            }
+        }
+    }
+    else { 
+        cout << "Invalid algorithm choice." << endl;
+        return;
+    }
+    cout << "No solution found." << endl;
 }
 
 int main() {
